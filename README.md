@@ -12,6 +12,14 @@ Composer autoloader is used for autoloading
 composer install
 ```
 
+# Running tests
+
+(in main directory)
+
+```
+./vendor/bin/phpunit --bootstrap autoload.php tests
+```
+
 # Running calculations
 (inside dist directory)
 ```
