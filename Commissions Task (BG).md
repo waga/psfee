@@ -119,9 +119,3 @@ Result - calculated commission fees for each operation. In each line only final 
 
 - all requirements must be met;
 - code quality - it's maintainability, extensibility, testability; speed of the system can also be considered, but is not as important as other criteria.
-
-# Task Submission
-
-You can put the code publicly (in github or similar code control systems) if you want, but please note the requirement about Paysera name usage.
-
-Send it in your favourite format (link to versioned code, code in zip file etc.) to code@paysera.bg.

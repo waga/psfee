@@ -9,7 +9,7 @@ Composer autoloader is used for autoloading
 (in main directory)
 
 ```
-composer 
+composer install
 ```
 
 # Running calculations
