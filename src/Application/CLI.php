@@ -47,6 +47,10 @@ class CLI extends Application
     {
         $scriptFile = array_shift($arguments);
         
+        if (!$scriptFile) {
+            CLIUtil::showErrorAndExit('Missing script file name!');
+        }
+        
         if (count($arguments) != 1) {
             CLIUtil::showError('Invalid argument count!');
             AppUtil::showUsageAndExit($scriptFile);

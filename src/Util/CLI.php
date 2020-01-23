@@ -10,7 +10,7 @@ class CLI
      */
     public static function showMessage(string $message)
     {
-        fwrite(STDOUT, $message . PHP_EOL);
+        echo $message . PHP_EOL;
     }
     
     /**
