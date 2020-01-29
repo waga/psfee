@@ -1,6 +1,7 @@
 <?php
 namespace PSFee;
 
+use ErrorException;
 use PSFee\Config;
 
 abstract class Application
@@ -28,5 +29,24 @@ abstract class Application
     {
         $this->config = $config;
         return $this;
+    }
+    
+    /**
+     * Initialize application
+     * 
+     */
+    public function initialize()
+    {
+        set_error_handler('static::errorHandler');
+        return $this;
+    }
+    
+    /**
+     * Error handler
+     * 
+     */
+    protected function errorHandler($errno, $errstr, $errfile, $errline)
+    {
+        throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
     }
 }

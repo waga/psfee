@@ -16,6 +16,7 @@ use PSFee\User\OperationList as UserOperationList;
 use PSFee\User\Type as UserType;
 use PSFee\Operation\Type as OperationType;
 use PSFee\Currency;
+use PSFee\Exception\ApplicationException;
 
 class CLI extends Application
 {
@@ -33,7 +34,7 @@ class CLI extends Application
             $fees = $this->calculateFees($inputFileRows);
             $this->displayFees($fees);
         } catch (Exception $e) {
-            CLIUtil::showErrorAndExit($e->getMessage());
+            CLIUtil::showError($e->getMessage());
         }
     }
     
@@ -48,18 +49,17 @@ class CLI extends Application
         $scriptFile = array_shift($arguments);
         
         if (!$scriptFile) {
-            CLIUtil::showErrorAndExit('Missing script file name!');
+            throw new ApplicationException('Missing script file name!');
         }
         
         if (count($arguments) != 1) {
-            CLIUtil::showError('Invalid argument count!');
-            AppUtil::showUsageAndExit($scriptFile);
+            throw new ApplicationException('Invalid argument count!');
         }
         
         $inputFile = array_shift($arguments);
         
         if (!$inputFile) {
-            CLIUtil::showErrorAndExit('Invalid input file "'. $inputFile .'"!');
+            throw new ApplicationException('Invalid input file "'. $inputFile .'"!');
         }
         
         return [$scriptFile, $inputFile];
@@ -76,13 +76,13 @@ class CLI extends Application
         $validInputFileExtensions = $this->config->get('validInputFileExtensions');
         
         if (!in_array($pathInfo['extension'], $validInputFileExtensions)) {
-            CLIUtil::showErrorAndExit('Invalid file extension "'. 
+            throw new ApplicationException('Invalid file extension "'. 
                 $pathInfo['extension'] .'" (valid input file extentions: '. 
                 join(', ', $validInputFileExtensions) .')!');
         }
         
         if (!file_exists($inputFile)) {
-            CLIUtil::showErrorAndExit('File "'. $inputFile .'" not found!');
+            throw new ApplicationException('File "'. $inputFile .'" not found!');
         }
     }
     

@@ -5,6 +5,7 @@ use DateTime;
 use PSFee\Currency;
 use PSFee\User\Type as UserType;
 use PSFee\Operation\Type as OperationType;
+use PSFee\Exception\UserException;
 
 class Operation
 {
@@ -190,6 +191,9 @@ class Operation
      */
     public static function createFromNumericArray(array $data)
     {
+        if (count($data) != 6) {
+            throw new UserException('Invalid data!');
+        }
         $instance = (new static())
             ->setDate(new DateTime($data[0]))
             ->setUserID((int) $data[1])

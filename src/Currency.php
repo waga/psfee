@@ -1,8 +1,11 @@
 <?php
 namespace PSFee;
 
-use Exception;
 use PSFee\Currency\Converter;
+use PSFee\Currency\EUR;
+use PSFee\Currency\USD;
+use PSFee\Currency\JPY;
+use PSFee\Exception\CurrencyException;
 
 class Currency
 {
@@ -63,14 +66,13 @@ class Currency
      */
     public static function create(string $currency)
     {
-        $class = strtoupper($currency);
-        $class = __NAMESPACE__ .'\Currency\\'. $class;
-        
-        if (!class_exists($class)) {
-            throw new Exception('Currency "'. $class .'" not found!');
+        if ($currency == 'EUR') {
+            return new EUR();
+        } else if ($currency == 'USD') {
+            return new USD();
+        } else if ($currency == 'JPY') {
+            return new JPY();
         }
-        
-        $instance = new $class;
-        return $instance;
+        throw new CurrencyException('Currency "'. $currency .'" not found!');
     }
 }

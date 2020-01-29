@@ -6,6 +6,8 @@ use PSFee\User\Operation as UserOperation;
 use PSFee\User\OperationList as UserOperationList;
 use PSFee\Currency;
 use PSFee\Currency\EUR;
+use PSFee\User\Type\{Legal,Natural};
+use PSFee\Exception\UserException;
 
 abstract class Type
 {
@@ -82,14 +84,11 @@ abstract class Type
      */
     public static function create(string $type)
     {
-        $class = __NAMESPACE__ .'\Type\\'. ucfirst($type);
-        
-        if (!class_exists($class)) {
-            throw new Exception('User type "'. $class .'" not found!');
+        if ($type == 'legal') {
+            return (new Legal())->setBaseCurrency(new EUR());
+        } else if ($type == 'natural') {
+            return (new Natural())->setBaseCurrency(new EUR());
         }
-        
-        $instance = new $class;
-        $instance->setBaseCurrency(new EUR());
-        return $instance;
+        throw new UserException('Invalid user type "'. $type .'"!');
     }
 }

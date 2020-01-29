@@ -4,6 +4,8 @@ namespace PSFee\Operation;
 use Exception;
 use PSFee\User\Operation as UserOperation;
 use PSFee\User\OperationList as UserOperationList;
+use PSFee\Operation\Type\{CashIn, CashOut};
+use PSFee\Exception\OperationException;
 
 abstract class Type
 {
@@ -61,14 +63,11 @@ abstract class Type
      */
     public static function create(string $type)
     {
-        $class = ucfirst(str_replace('_', '', $type));
-        $class = __NAMESPACE__ .'\Type\\'. $class;
-        
-        if (!class_exists($class)) {
-            throw new Exception('Operation type "'. $class .'" not found!');
+        if ($type == 'cash_in') {
+            return new CashIn();
+        } else if ($type == 'cash_out') {
+            return new CashOut();
         }
-        
-        $instance = new $class;
-        return $instance;
+        throw new OperationException('Invalid operation type "'. $type .'"!');
     }
 }

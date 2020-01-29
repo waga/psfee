@@ -4,6 +4,7 @@ namespace PSFee\User\Type;
 use PSFee\User\Type;
 use PSFee\Currency\Converter;
 use PSFee\Operation\Type\CashOut;
+use PSFee\Config;
 
 class Natural extends Type
 {
@@ -14,6 +15,14 @@ class Natural extends Type
      */
     public function calculateCommissionFee()
     {
+        $config = Config::getInstance();
+        $discountedOperationCount = $config->dot(
+            'commission.natural.discount.operation_count');
+        $discountedOperationSum = $config->dot(
+            'commission.natural.discount.operation_sum');
+        $feePercentage = $config->dot(
+            'commission.natural.fee_percentage');
+        
         $currentOperationCurrency = $this->userOperation->getCurrency();
         $currentOperationAmount = $this->userOperation->getAmount();
         
@@ -23,20 +32,22 @@ class Natural extends Type
         $prevOperationsInfo = $this->getPreviousOperationsCalc();
         $totalSum = $currentOperationAmount + $prevOperationsInfo['amount'];
         
-        if ($prevOperationsInfo['count'] < 3 && $totalSum <= 1000) {
+        if ($prevOperationsInfo['count'] < $discountedOperationCount && 
+            $totalSum <= $discountedOperationSum) {
             return 0;
         }
         
         $amount = $currentOperationAmount;
         
-        if ($prevOperationsInfo['amount'] <= 1000 && $totalSum > 1000) {
-            $amount = $totalSum - 1000;
+        if ($prevOperationsInfo['amount'] <= $discountedOperationSum && 
+            $totalSum > $discountedOperationSum) {
+            $amount = $totalSum - $discountedOperationSum;
         }
         
         $amount = $this->baseCurrency->convert(
             $currentOperationCurrency, $amount);
         
-        $fee = 0.3 * $amount / 100;
+        $fee = $feePercentage * $amount / 100;
         return $fee;
     }
     

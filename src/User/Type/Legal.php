@@ -2,6 +2,7 @@
 namespace PSFee\User\Type;
 
 use PSFee\User\Type;
+use PSFee\Config;
 
 class Legal extends Type
 {
@@ -12,10 +13,13 @@ class Legal extends Type
      */
     public function calculateCommissionFee()
     {
-        $fee = 0.3 * $this->userOperation->getAmount() / 100;
+        $config = Config::getInstance();
+        $feePercentage = $config->dot('commission.legal.fee_percentage');
+        $minFee = $config->dot('commission.legal.min_fee');
+        $fee = $feePercentage * $this->userOperation->getAmount() / 100;
         
-        if ($fee < 0.5) {
-            $fee = 0.5;
+        if ($fee < $minFee) {
+            $fee = $minFee;
         }
         
         return $fee;

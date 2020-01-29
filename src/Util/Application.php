@@ -20,18 +20,4 @@ class Application
     {
         CLIUtil::showMessage('Usage: php '. $scriptFile .' '. $inputFile);
     }
-    
-    /**
-     * Show application usage and exit
-     * 
-     * @param string $scriptFile Script file name
-     * @param string $inputFile Input file name
-     */
-    public static function showUsageAndExit(
-        string $scriptFile = self::DEFAULT_SCRIPT_FILE, 
-        string $inputFile = self::DEFAULT_INPUT_FILE)
-    {
-        static::showUsage($scriptFile);
-        exit;
-    }
 }

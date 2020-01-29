@@ -1,0 +1,66 @@
+Improvements:
+
+1. Application cloned from git repository does not work on linux.
+
+php app.php ../input/input.csv
+Error: Operation type "PSFee\Operation\Type\Cashout" not found!
+
+Please fix it to work on linux.
+
+2. Dynamic class names are used that will work on Windows but not on linux.
+
+Example :
+src/Operation/Type.php:65
+PSFee\Operation\Type\Cashout
+and
+PSFee\Operation\Type\CashOut
+are different classes(and one of them does not exist in your code) but will work on Windows.
+
+We believe that string manipulation on data in order to determine correct class 
+name leads to application strange behavior, makes code hard to read or debug.
+
+We would avoid building dynamic class names. 
+We would configure the allowed Classes in fooProvider or in barFactory (if we need to) 
+and use it to get correctly constructed class based on some data and specific logic constructs.
+
+3. Improve error handling. It is not good idea to use CLIUtil::showErrorAndExit 
+
+all over the app as you will kill the code execution and throw 
+away the idea of error handling. This way your application is fragile and hard to debug.
+
+We would implement an error handler on the lowest possible level of the 
+application and throw specific exceptions to ensure that we can handle them correctly.
+
+4. Unit test. Actually the main functionality is not tests. 
+
+ApplicationTest is kind of functional test, 
+but we can't find test for error handling(for example).
+
+Please provide Unit test on you main functionality - commission calculations for example.
+
+5. Configuration is mixed with business logic.
+
+For example PSFee\Operation\Type\CashIn, 
+PSFee\User\Type\Legal, 
+PSFee\User\Type\Natural 
+have configuration that cannot be changed without changing the code.
+What if we want to calculate the result on same input twice with different commissions?
+
+6. There is some data structures inconsistency. 
+
+For example currencies. In JPY we have property $precision, 
+but EUR and USD, does not have this property.
+
+It is impossible to say what is the precision of EUR and USD just 
+looking at these classes, and if the precision is missing on purpose.
+
+Actually we are confused about currency. 
+Why do we have src/Currency.php and than src/Currency/*. 
+Which one is currency and which one currency config? 
+What is the point in having them both as the one that 
+I assume is currency configuration does not hold complete configuration?
+
+7. Why do we need util.php? 
+Why do we need so complicated src/Config.php as we have a simple /config/config.php 
+that will do the same job? 
+Please remove all dev related or unnecessary code from you solution.

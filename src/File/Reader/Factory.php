@@ -1,7 +1,7 @@
 <?php
 namespace PSFee\File\Reader;
 
-use Exception;
+use PSFee\Exception\FileReaderException;
 
 class Factory
 {
@@ -15,16 +15,16 @@ class Factory
     public static function create(string $type, array $params = array())
     {
         if (!class_exists($type)) {
-            throw new Exception('File reader "'. $type .'" not found!');
+            throw new FileReaderException('File reader "'. $type .'" not found!');
         }
         
         if (!is_subclass_of($type, __NAMESPACE__)) {
-            throw new Exception('File reader "'. $type 
+            throw new FileReaderException('File reader "'. $type 
                 .'" must inherit "'. __NAMESPACE__ .'"!');
         }
         
         if (!array_key_exists('handler', $params) || !$params['handler']) {
-            throw new Exception('Missing handler parameter!');
+            throw new FileReaderException('Missing handler parameter!');
         }
         
         $reader = new $type();

@@ -2,6 +2,7 @@
 namespace PSFee\Operation\Type;
 
 use PSFee\Operation\Type;
+use PSFee\Config;
 
 class CashIn extends Type
 {
@@ -12,10 +13,13 @@ class CashIn extends Type
      */
     public function calculateCommissionFee()
     {
-        $fee = 0.03 * $this->userOperation->getAmount() / 100;
+        $config = Config::getInstance();
+        $feePercentage = $config->dot('commission.cash_in.fee_percentage');
+        $maxFee = $config->dot('commission.cash_in.max_fee');
+        $fee = $feePercentage * $this->userOperation->getAmount() / 100;
         
-        if ($fee > 5) {
-            $fee = 5;
+        if ($fee > $maxFee) {
+            $fee = $maxFee;
         }
         
         return $fee;
